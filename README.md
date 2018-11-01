@@ -7,4 +7,4 @@ Arduino IO Shield
 - 8 Analog Outputs, 2xAD5625R 12bit DAC, 0..5V
 - Arduino pins A0-A5 wired to an auxiliary conector
 
-<img src="https://github.com/Poduzov/TIRF-Labs/blob/master/Schematics/Top.jpg">
+<img width="50%" height="50%" src="https://github.com/Poduzov/TIRF-Labs/blob/master/Schematics/Top.jpg">
