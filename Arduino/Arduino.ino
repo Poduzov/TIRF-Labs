@@ -178,6 +178,11 @@ void ProcessCommand()
         pingTimer = 0;
         ParseWriteSeq();
         break;
+      case CMD_EXEC_STEP:
+        startTimer = 0;
+        pingTimer = 0;
+        ParseExecStep();
+        break;
     }
 
     rxPos = -1;
@@ -185,6 +190,13 @@ void ProcessCommand()
     AddCheckSum(6);
     Serial.println(txBuf);
   }
+}
+
+void ParseExecStep() {
+  seq.TempIndex = DecToInt(4, 2);
+  seq.LoadTemp();
+  ExecuteSeqStep();
+  seq.Running = true;
 }
 
 void ParseWriteSeq() {
@@ -369,6 +381,28 @@ void DelayInt() {
   }
 }
 
+void StartSeqStep() {
+  seq.LoadTemp();
+
+  if (seq.TempStep.TriggerType == TRIGGER_TIMER) {
+    long timer;
+
+    timer = seq.TempStep.TriggerDelay * 100000l;
+    noInterrupts();
+    Timer1.stop();
+    Timer1.setPeriod(timer);
+    Timer1.resume();
+    interrupts();
+  }
+  else {
+    noInterrupts();
+    Timer1.stop();
+    interrupts();
+  }
+
+  seq.Running = true;
+}
+
 void ExecuteSeqStep() {
   unsigned int raw;
   bool ldac = false;
@@ -439,28 +473,6 @@ void DOWrite(byte ch, bool value)
 
   digitalWrite(pin, value ? HIGH : LOW);
   return;
-}
-
-void StartSeqStep() {
-  seq.LoadTemp();
-
-  if (seq.TempStep.TriggerType == TRIGGER_TIMER) {
-    long timer;
-
-    timer = seq.TempStep.TriggerDelay * 100000l;
-    noInterrupts();
-    Timer1.stop();
-    Timer1.setPeriod(timer);
-    Timer1.resume();
-    interrupts();
-  }
-  else {
-    noInterrupts();
-    Timer1.stop();
-    interrupts();
-  }
-
-  seq.Running = true;
 }
 
 void CyclicInt()
