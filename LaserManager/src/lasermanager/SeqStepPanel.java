@@ -44,31 +44,12 @@ public class SeqStepPanel extends JPanel {
 
     public SeqStepPanel() {
         super(new BorderLayout(5, 5));
-
+        
         JPanel p1, p2, p3;
         ImageIcon icon;
-
+        
         setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-
-        icon = createImageIcon("images/usb.png");
-        TriggerButton = new JButton("200ms", icon);
-        TriggerButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
-        TriggerButton.setMinimumSize(new Dimension(130, 40));
-        TriggerButton.setPreferredSize(new Dimension(130, 40));
-        TriggerButton.setHorizontalAlignment(SwingConstants.LEFT);
-        TriggerButton.setIconTextGap(10);
-        TriggerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SequenceStepActionParam param = new SequenceStepActionParam();
-                param.EventType = SequenceStepActionParam.EVENT_EDIT_TRIGGER;
-
-                if (ActionListener != null) {
-                    ActionListener.ActionPerformed(param);
-                }
-            }
-        });
-
+        
         ActionsTable = new JTable();
         ActionsTable.setOpaque(false);
         ActionsTable.setRowHeight(40);
@@ -88,46 +69,68 @@ public class SeqStepPanel extends JPanel {
         model.addRow(data);
         ActionsTable.getTableHeader().setReorderingAllowed(false);
         ActionsTable.getTableHeader().setResizingAllowed(false);
-
+        
         for (int i = 0; i < Configuration.AO_COUNT; i++) {
             ActionsTable.getColumnModel().getColumn(i).setCellEditor(new AnalogActionEditor(AnalogListener));
             ActionsTable.getColumnModel().getColumn(i).setCellRenderer(new AnalogActionRenderer(AnalogListener));
         }
-
+        
         for (int i = Configuration.AO_COUNT; i < Configuration.AO_COUNT + Configuration.DO_COUNT; i++) {
             ActionsTable.getColumnModel().getColumn(i).setCellEditor(new DigitalActionEditor(DigitalListener));
             ActionsTable.getColumnModel().getColumn(i).setCellRenderer(new DigitalActionRenderer(DigitalListener));
         }
-
+        
         IndexLabel = new JLabel("");
         IndexLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
         IndexLabel.setBorder(new EmptyBorder(0, 5, 0, 0));
         IndexLabel.setMaximumSize(new Dimension(30, 100));
         IndexLabel.setPreferredSize(new Dimension(30, 100));
         IndexLabel.setOpaque(false);
-
+        
         JPanel TablePanel = new JPanel();
         TablePanel.setLayout(new BorderLayout());
         TablePanel.add(ActionsTable, BorderLayout.CENTER);
         TablePanel.add(ActionsTable.getTableHeader(), BorderLayout.PAGE_START);
-
+        
         this.add(IndexLabel, BorderLayout.WEST);
-
+        
         p1 = new JPanel();
         p1.setOpaque(false);
         p1.setLayout(new BorderLayout());
-
+        
         p2 = new JPanel();
         p2.setBorder(new EmptyBorder(0, 0, 2, 0));
         p2.setOpaque(false);
         p2.setLayout(new BorderLayout());
-        p2.add(TriggerButton, BorderLayout.WEST);
-
+        
+        icon = createImageIcon("images/usb.png");
+        TriggerButton = new JButton("200ms", icon);
+        TriggerButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        TriggerButton.setHorizontalAlignment(SwingConstants.LEFT);
+        TriggerButton.setIconTextGap(10);
+        TriggerButton.setPreferredSize(new Dimension(120, 0));
+        TriggerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SequenceStepActionParam param = new SequenceStepActionParam();
+                param.EventType = SequenceStepActionParam.EVENT_EDIT_TRIGGER;
+                
+                if (ActionListener != null) {
+                    ActionListener.ActionPerformed(param);
+                }
+            }
+        });
+        
+        p3 = new JPanel();
+        p3.setOpaque(false);
+        p3.setLayout(new BorderLayout());
+        p3.setOpaque(false);
+        p3.add(TriggerButton, BorderLayout.WEST);
+        p2.add(p3);
+        
         p3 = new JPanel();
         p3.setOpaque(false);
         p3.setLayout(new BoxLayout(p3, BoxLayout.X_AXIS));
-
-        
         
         icon = createImageIcon("images/play.png");
         RunButton = new JButton("", icon);
@@ -137,16 +140,17 @@ public class SeqStepPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 SequenceStepActionParam param = new SequenceStepActionParam();
                 param.EventType = SequenceStepActionParam.EVENT_START;
-
+                
                 if (ActionListener != null) {
                     ActionListener.ActionPerformed(param);
                 }
             }
         });
+        RunButton.setToolTipText("Execute step");
         p3.add(RunButton);
         
         p3.add(new Filler(new java.awt.Dimension(30, 0), new java.awt.Dimension(30, 0), new java.awt.Dimension(32767, 0)));
-
+        
         icon = createImageIcon("images/add.png");
         AddButton = new JButton("", icon);
         AddButton.addActionListener(new ActionListener() {
@@ -154,14 +158,15 @@ public class SeqStepPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 SequenceStepActionParam param = new SequenceStepActionParam();
                 param.EventType = SequenceStepActionParam.EVENT_ADD;
-
+                
                 if (ActionListener != null) {
                     ActionListener.ActionPerformed(param);
                 }
             }
         });
+        AddButton.setToolTipText("Add a step below");
         p3.add(AddButton);
-
+        
         icon = createImageIcon("images/delete.png");
         DeleteButton = new JButton("", icon);
         DeleteButton.setAlignmentX(RIGHT_ALIGNMENT);
@@ -170,21 +175,21 @@ public class SeqStepPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 SequenceStepActionParam param = new SequenceStepActionParam();
                 param.EventType = SequenceStepActionParam.EVENT_DELETE;
-
+                
                 if (ActionListener != null) {
                     ActionListener.ActionPerformed(param);
                 }
             }
         });
+        DeleteButton.setToolTipText("Delete step");
         p3.add(DeleteButton);
-
+        
         p2.add(p3, BorderLayout.EAST);
-
+        
         p1.add(p2, BorderLayout.PAGE_START);
         p1.add(TablePanel, BorderLayout.CENTER);
-
+        
         this.add(p1, BorderLayout.CENTER);
-
     }
 
     public void updateValue(SequenceStep value) {
