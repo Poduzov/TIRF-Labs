@@ -8,3 +8,6 @@ Arduino IO Shield
 - Arduino pins A0-A5 wired to an auxiliary conector
 
 <img width="50%" height="50%" src="https://github.com/Poduzov/TIRF-Labs/blob/master/Schematics/Top.jpg">
+
+Java cross-platform manager
+<img width="50%" height="47%" src="https://github.com/Poduzov/TIRF-Labs/blob/master/Schematics/Screen01.png">
